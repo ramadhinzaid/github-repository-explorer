@@ -20,6 +20,7 @@ import {
   getRepositoryFailed,
   getRepositorySuccess,
 } from "./store/repositorySlice";
+import Loading from "./components/Loading";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
@@ -96,7 +97,7 @@ function App() {
 
           <div className="mt-3">
             {users === null || users === undefined || users?.length <= 0 ? (
-              <></>
+              <>{isLoading ? <Loading /> : <></>}</>
             ) : (
               users.map((user) => {
                 return (
