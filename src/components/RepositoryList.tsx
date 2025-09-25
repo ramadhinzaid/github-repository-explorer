@@ -5,7 +5,7 @@ import { ErrorCard, MessageCard } from "./Cards";
 import Loading from "./Loading";
 
 export default function RepositoryList() {
-  const { selectedUser } = useSelector((state: RootState) => state.user);
+  const { users, selectedUser } = useSelector((state: RootState) => state.user);
   const { repositories, isLoading, error } = useSelector(
     (state: RootState) => state.repository
   );
@@ -19,6 +19,8 @@ export default function RepositoryList() {
   if (
     repositories === undefined ||
     repositories === null ||
+    users === null ||
+    users.length == 0 ||
     selectedUser == null ||
     repositories?.length <= 0
   ) {

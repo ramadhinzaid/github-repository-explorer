@@ -1,6 +1,5 @@
 import "./App.css";
 import { ButtonSubmit } from "./components/Buttons";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import RepositoryList from "./components/RepositoryList";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "./store/store";
@@ -10,21 +9,15 @@ import {
   getUserSuccess,
   reset,
   setKeyword,
-  setSelectedUser,
 } from "./store/userSlice";
 import type ErrorType from "./types/ErrorType";
-import { getGithubUser, getGithubUserRepository } from "./api/githubSearchApi";
-import type { GithubUserItem } from "./types/GithubUser";
-import {
-  getRepository,
-  getRepositoryFailed,
-  getRepositorySuccess,
-} from "./store/repositorySlice";
-import Loading from "./components/Loading";
+import { getGithubUser } from "./api/githubSearchApi";
+import UserList from "./components/UserList";
+import { X } from "lucide-react";
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, users, keyword, selectedUser } = useSelector(
+  const { isLoading, keyword, users } = useSelector(
     (state: RootState) => state.user
   );
 
@@ -53,41 +46,32 @@ function App() {
     }
   }
 
-  async function searchGithubUserRepository(username: string) {
-    dispatch(getRepository());
-    try {
-      const repositories = await getGithubUserRepository(username);
-      dispatch(getRepositorySuccess(repositories));
-    } catch (error) {
-      dispatch(getRepositoryFailed(error as ErrorType));
-    }
-  }
-
-  function handleSelectUser(user: GithubUserItem) {
-    if (user.id != selectedUser?.id) {
-      dispatch(setSelectedUser(user));
-      searchGithubUserRepository(user.name ?? "");
-    } else {
-      dispatch(setSelectedUser(null));
-    }
-  }
-
   return (
     <>
-      <div className="w-full h-full grid grid-cols-3 gap-4">
-        <div className="w-full col-span-3 md:col-span-1 overflow-y-auto p-5">
-          <div className="search-container">
-            <form method="submit" onSubmit={handleSearch}>
+      <div className="w-full h-full grid grid-cols-12 gap-4">
+        <div className="w-full col-span-12 md:col-span-6 lg:col-span-5 overflow-y-auto p-5">
+          <form
+            method="submit"
+            onReset={() => dispatch(reset())}
+            onSubmit={handleSearch}
+          >
+            <div className="flex items-center rounded-md bg-white/5 pl-3 mb-4 outline-1 -outline-offset-1 outline-gray-600 has-[input:focus-within]:outline-2 has-[input:focus-within]:-outline-offset-2 has-[input:focus-within]:outline-indigo-500">
               <input
                 id="keyword"
                 type="text"
-                className="w-full p-3 border border-gray-300 rounded-md text-base mb-4 bg-white placeholder-italic placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                className="block min-w-0 grow bg-white p-3 text-base placeholder-italic placeholder-gray-400 focus:outline-none"
                 placeholder="Enter username"
               />
-              <ButtonSubmit title="Search" isLoading={isLoading} />
-            </form>
-          </div>
-          {keyword != null && keyword?.length >= 1 ? (
+              <button type="reset">
+                <X className="grid shrink-0 grid-cols-1 focus-within:relative mr-3" />
+              </button>
+            </div>
+            <ButtonSubmit title="Search" isLoading={isLoading} />
+          </form>
+          {keyword != null &&
+          keyword?.length >= 1 &&
+          users != null &&
+          users?.length >= 1 ? (
             <p className="mt-3 font-medium text-gray-700">
               Showing users for "{keyword}"
             </p>
@@ -96,41 +80,10 @@ function App() {
           )}
 
           <div className="mt-3">
-            {users === null || users === undefined || users?.length <= 0 ? (
-              <>{isLoading ? <Loading /> : <></>}</>
-            ) : (
-              users.map((user) => {
-                return (
-                  <>
-                    <div
-                      key={user.id}
-                      onClick={() => handleSelectUser(user)}
-                      className="flex items-center justify-between bg-gray-200 p-3 my-2.5 rounded-md cursor-pointer"
-                    >
-                      <span className="font-medium text-gray-700">
-                        {user.name}
-                      </span>
-                      {selectedUser?.id === user.id ? (
-                        <ChevronUp />
-                      ) : (
-                        <ChevronDown />
-                      )}
-                    </div>
-
-                    {selectedUser?.id === user.id ? (
-                      <div className="ps-3 md:hidden">
-                        <RepositoryList />
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                );
-              })
-            )}
+            <UserList />
           </div>
         </div>
-        <div className="hidden md:block col-span-2 overflow-y-auto pe-3 py-3">
+        <div className="hidden md:block col-span-6 lg:col-span-7 overflow-y-auto pe-3 py-3">
           <RepositoryList />
         </div>
       </div>
