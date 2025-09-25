@@ -1,18 +1,18 @@
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../store/store";
-import Loading from "./Loading";
-import { ErrorCard } from "./Cards";
+import type { AppDispatch, RootState } from "../../store/store";
+import Loading from "../Loading/Loading";
+import { ErrorCard } from "../Cards/Cards";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import RepositoryList from "./RepositoryList";
-import type { GithubUserItem } from "../types/GithubUser";
+import type { GithubUserItem } from "../../types/GithubUser";
 import {
   getRepository,
   getRepositoryFailed,
   getRepositorySuccess,
-} from "../store/repositorySlice";
-import { getGithubUserRepository } from "../api/githubSearchApi";
-import type ErrorType from "../types/ErrorType";
-import { setSelectedUser } from "../store/userSlice";
+} from "../../store/repositorySlice";
+import { getGithubUserRepository } from "../../api/githubSearchApi";
+import type ErrorType from "../../types/ErrorType";
+import { setSelectedUser } from "../../store/userSlice";
 
 export default function UserList() {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,9 +51,8 @@ export default function UserList() {
   }
   return users.map((user) => {
     return (
-      <>
+      <div key={user.id}>
         <div
-          key={user.id}
           onClick={() => handleSelectUser(user)}
           className="flex items-center justify-between bg-gray-200 p-3 my-2.5 rounded-md cursor-pointer"
         >
@@ -68,7 +67,7 @@ export default function UserList() {
         ) : (
           <></>
         )}
-      </>
+      </div>
     );
   });
 }

@@ -1,5 +1,5 @@
 import { Frown, type LucideProps } from "lucide-react";
-import type ErrorType from "../types/ErrorType";
+import type ErrorType from "../../types/ErrorType";
 
 export function ErrorCard({ error }: { error: ErrorType }) {
   return (

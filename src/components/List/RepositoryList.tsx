@@ -1,8 +1,8 @@
 import { FolderGit2, Star, UserSearch } from "lucide-react";
 import { useSelector } from "react-redux";
-import type { RootState } from "../store/store";
-import { ErrorCard, MessageCard } from "./Cards";
-import Loading from "./Loading";
+import type { RootState } from "../../store/store";
+import { ErrorCard, MessageCard } from "../Cards/Cards";
+import Loading from "../Loading/Loading";
 
 export default function RepositoryList() {
   const { users, selectedUser } = useSelector((state: RootState) => state.user);

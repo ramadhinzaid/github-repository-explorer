@@ -1,6 +1,6 @@
 import "./App.css";
-import { ButtonSubmit } from "./components/Buttons";
-import RepositoryList from "./components/RepositoryList";
+import { ButtonSubmit } from "./components/Buttons/Buttons";
+import RepositoryList from "./components/List/RepositoryList";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "./store/store";
 import {
@@ -12,7 +12,7 @@ import {
 } from "./store/userSlice";
 import type ErrorType from "./types/ErrorType";
 import { getGithubUser } from "./api/githubSearchApi";
-import UserList from "./components/UserList";
+import UserList from "./components/List/UserList";
 import { X } from "lucide-react";
 
 function App() {
